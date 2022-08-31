@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:21:02 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 04:03:12 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/08/31 05:10:43 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	main(int argc, char *argv[])
 {
 	t_param	param;
 
-	printf("%d\n", argc);
 	if (argc != 5 && argc != 6)
 		return (ft_error("[Error]check num of arg"));
 	if (ft_philo_init(argc, argv, &param))

@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 04:08:57 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/08/31 05:47:55 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ int	ft_make_forks(t_param *param)
 	int	i;
 
 	i = 0;
+	param->print = malloc(sizeof(pthread_mutex_t));
+	if (param->print == NULL)
+		return (ft_error("[Error]malloc print fail"));
+	if (pthread_mutex_init(&param->print[0], NULL))
+		return (ft_error("[Error]print mutex init fail"));
 	param->forks = malloc(sizeof(pthread_mutex_t) * (param->philo_num));
 	if (param->forks == NULL)
 		return (ft_error("[Error]malloc forks fail"));

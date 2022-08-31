@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 04:18:34 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/08/31 06:02:45 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,31 @@ int	ft_start_philo(t_param *par, t_philo *philo)
 			return (ft_error("[Error]thread create fail"));
 		i++;
 	}
-	if (ft_check_die(par))
-		return (1);
+	ft_check_die(par);
 	return (0);
 }
 
 int	ft_check_die(t_param *par)
 {
-	while (1)
+	int			i;
+	long long	time;
+
+	i = 0;
+	usleep(par->time_to_die * 1000);
+	while (par->is_all_safe)
 	{
-		if (!(par->is_all_safe))
-			return (1);
+		while (i < par->philo_num)
+		{
+			time = ft_get_time() - par->start_time;
+			if ((time - par->philo[i].last_eat_time) > par->time_to_die)
+			{
+				par->is_all_safe = 0;
+				printf("%lldms	%d	is died\n", time, par->philo[i].philo_id);
+				break ;
+			}
+			i++;
+		}
+		i = 0;
 	}
+	return (0);
 }
