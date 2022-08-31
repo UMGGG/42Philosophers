@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 06:02:45 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/01 05:49:59 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	ft_check_die(t_param *par)
 				printf("%lldms	%d	is died\n", time, par->philo[i].philo_id);
 				break ;
 			}
+			usleep(1);
 			i++;
 		}
 		i = 0;

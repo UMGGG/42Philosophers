@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 05:43:55 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/01 06:03:41 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_param
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*print;
+	pthread_mutex_t	*eat;
 }				t_param;
 
 /*utils*/
@@ -57,6 +58,7 @@ int			ft_make_philo(t_param *par);
 int			ft_make_forks(t_param *param);
 /*time*/
 long long	ft_get_time(void);
+void		ft_wait(t_param *param, int time);
 /*start*/
 int			ft_start_philo(t_param *par, t_philo *philo);
 int			ft_check_die(t_param *par);
@@ -65,5 +67,5 @@ void		*do_philo(void *philo);
 void		do_think(t_philo *philo, t_param *param);
 void		do_sleep(t_philo *philo, t_param *param);
 void		do_eat(t_philo *philo, t_param *param);
-void		get_fork(t_philo *philo, t_param *param);
+void		get_fork1(t_philo *philo, t_param *param);
 #endif

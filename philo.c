@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 06:30:06 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/01 06:05:07 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,18 @@ void	*do_philo(void *philo)
 
 	phil = (t_philo *)philo;
 	param = phil->param;
-	if (phil->philo_id % 2 == 1)
-		usleep(param->time_to_eat * 1000);
+	if (phil->philo_id % 2 != 1)
+		usleep(10000);
 	while (param->is_all_safe)
 	{
-		get_fork(philo, param);
+		get_fork1(philo, param);
 		do_sleep(philo, param);
-		usleep(param->time_to_sleep * 1000);
-		usleep(200);
 		do_think(philo, param);
 	}
 	return (0);
 }
 
-void	get_fork(t_philo *philo, t_param *param)
+void	get_fork1(t_philo *philo, t_param *param)
 {
 	long long	time;
 
@@ -42,12 +40,12 @@ void	get_fork(t_philo *philo, t_param *param)
 	printf("%lldms	%d	has taken a fork\n", time, philo->philo_id);
 	pthread_mutex_unlock(&param->print[0]);
 	pthread_mutex_lock(&param->forks[philo->rightfork]);
+	do_eat(philo, param);
 	time = ft_get_time() - param->start_time;
 	pthread_mutex_lock(&param->print[0]);
 	printf("%lldms	%d	has taken a fork\n", time, philo->philo_id);
 	pthread_mutex_unlock(&param->print[0]);
-	do_eat(philo, param);
-	usleep(param->time_to_eat * 1000);
+	ft_wait(param, param->time_to_eat);
 	pthread_mutex_unlock(&param->forks[philo->leftfork]);
 	pthread_mutex_unlock(&param->forks[philo->rightfork]);
 }
@@ -70,6 +68,7 @@ void	do_sleep(t_philo *philo, t_param *param)
 	pthread_mutex_lock(&param->print[0]);
 	printf("%lldms	%d	is sleeping\n", time, philo->philo_id);
 	pthread_mutex_unlock(&param->print[0]);
+	ft_wait(param, param->time_to_sleep);
 }
 
 void	do_eat(t_philo *philo, t_param *param)

@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 03:05:43 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 03:28:19 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/01 06:03:33 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,19 @@ long long	ft_get_time(void)
 	gettimeofday(&time, NULL);
 	sec = (time.tv_sec * 1000) + (time.tv_usec / 1000);
 	return (sec);
+}
+
+void	ft_wait(t_param *param, int time)
+{
+	long long	now_time;
+	long long	start_time;
+
+	start_time = ft_get_time();
+	while (param->is_all_safe)
+	{
+		now_time = ft_get_time();
+		if (now_time - start_time >= time)
+			break ;
+		usleep(10);
+	}
 }
