@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/01 18:54:53 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/02 03:44:50 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,35 +26,62 @@ int	ft_start_philo(t_param *par, t_philo *philo)
 			return (ft_error("[Error]thread create fail"));
 		i++;
 	}
+	usleep(par->time_to_die * 1000);
 	ft_check_die(par);
 	return (0);
 }
 
 void	ft_check_die(t_param *par)
 {
-	int			i;
-	long long	time;
+	int	i;
 
 	i = 0;
-	usleep(par->time_to_die * 1000);
 	while (par->is_all_safe)
 	{
 		while (i < par->philo_num)
 		{
-			time = ft_get_time() - par->start_time;
-			if ((time - par->philo[i].last_eat_time) > par->time_to_die)
-			{
-				par->is_all_safe = 0;
-				pthread_mutex_lock(&par->print[0]);
-				printf("%lldms	%d	is died\n", time, par->philo[i].philo_id);
+			pthread_mutex_lock(&(par->eat[0]));
+			if (check_eat_time(par, i))
 				break ;
-			}
+			if (check_eat_num(par, i))
+				break ;
+			pthread_mutex_unlock(&(par->eat[0]));
 			i++;
+			usleep(10);
 		}
 		i = 0;
 	}
 	finish_thread(par);
-	free(par->print);
+}
+
+int	check_eat_time(t_param *p, int i)
+{
+	long long	time;
+
+	time = ft_get_time() - p->start_time;
+	if ((time - p->philo[i].last_eat_time) > p->time_to_die)
+	{
+		p->is_all_safe = 0;
+		pthread_mutex_lock(&p->print[0]);
+		printf("%lldms	%d	is died\n", time, p->philo[i].philo_id);
+		return (1);
+	}
+	return (0);
+}
+
+int	check_eat_num(t_param *p, int i)
+{
+	long long	time;
+
+	time = ft_get_time() - p->start_time;
+	if (p->philo[i].eat_count >= p->must_eat_num && p->must_eat_num != -1)
+	{
+		p->is_all_safe = 0;
+		pthread_mutex_lock(&p->print[0]);
+		printf("%lldms	Finished\n", time);
+		return (1);
+	}
+	return (0);
 }
 
 void	finish_thread(t_param *param)
@@ -75,4 +102,9 @@ void	finish_thread(t_param *param)
 	}
 	free(param->forks);
 	free(param->philo);
+	pthread_mutex_unlock(&param->print[0]);
+	pthread_mutex_destroy(&(param->print[0]));
+	free(param->print);
+	pthread_mutex_destroy(&(param->eat[0]));
+	free(param->eat);
 }

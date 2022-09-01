@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/01 23:42:39 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/02 03:10:25 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*do_philo(void *philo)
 	phil = (t_philo *)philo;
 	param = phil->param;
 	if (phil->philo_id % 2 != 1)
-		usleep(1000);
+		usleep(10000);
 	while (param->is_all_safe)
 	{
 		get_fork1(philo, param);
@@ -58,7 +58,10 @@ void	do_eat(t_philo *philo, t_param *param)
 {
 	long long	time;
 
+	pthread_mutex_lock(&(param->eat[0]));
+	philo->eat_count++;
 	time = ft_get_time() - param->start_time;
 	philo->last_eat_time = time;
 	ft_print(param, philo, "is eating");
+	pthread_mutex_unlock(&(param->eat[0]));
 }
