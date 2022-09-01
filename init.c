@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/02 01:38:35 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/02 06:15:42 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 int	ft_philo_init(int argc, char *argv[], t_param *par)
 {
+	int	i;
+
+	i = 0;
 	if (check_argv(argc, argv))
 		return (ft_error("[Error]check argv data"));
 	par->philo_num = ft_atoi(argv[1]);
@@ -24,6 +27,11 @@ int	ft_philo_init(int argc, char *argv[], t_param *par)
 		par->must_eat_num = ft_atoi(argv[5]);
 	else
 		par->must_eat_num = -1;
+	par->fork_st = malloc(sizeof(int) * par->philo_num);
+	if (par->fork_st == NULL)
+		return (ft_error("[Error]malloc fork fail"));
+	while (i < par->philo_num)
+		par->fork_st[i++] = 0;
 	par->is_all_safe = 1;
 	if (ft_make_philo(par))
 		return (ft_error("[Error]malloc philo fail"));
@@ -60,15 +68,11 @@ int	ft_make_forks(t_param *param)
 	int	i;
 
 	i = 0;
-	param->print = malloc(sizeof(pthread_mutex_t));
-	if (param->print == NULL)
-		return (ft_error("[Error]malloc print fail"));
-	param->eat = malloc(sizeof(pthread_mutex_t));
-	if (param->eat == NULL)
-		return (ft_error("[Error]malloc eat fail"));
-	if (pthread_mutex_init(&param->print[0], NULL))
+	if (pthread_mutex_init(&(param->print), NULL))
 		return (ft_error("[Error]print mutex init fail"));
-	if (pthread_mutex_init(&param->eat[0], NULL))
+	if (pthread_mutex_init(&(param->search_fork), NULL))
+		return (ft_error("[Error]search_fork mutex init fail"));
+	if (pthread_mutex_init(&(param->eat), NULL))
 		return (ft_error("[Error]eat mutex init fail"));
 	param->forks = malloc(sizeof(pthread_mutex_t) * (param->philo_num));
 	if (param->forks == NULL)

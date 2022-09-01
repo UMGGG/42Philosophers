@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/02 03:10:25 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/02 06:23:58 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@ void	*do_philo(void *philo)
 	phil = (t_philo *)philo;
 	param = phil->param;
 	if (phil->philo_id % 2 != 1)
-		usleep(10000);
+		usleep(1000);
 	while (param->is_all_safe)
 	{
-		get_fork1(philo, param);
+		while (get_fork1(philo, param))
+			usleep(10);
 		do_sleep(philo, param);
 		do_think(philo, param);
 		usleep(100);
@@ -31,16 +32,28 @@ void	*do_philo(void *philo)
 	return (0);
 }
 
-void	get_fork1(t_philo *philo, t_param *param)
+int	get_fork1(t_philo *p, t_param *param)
 {
-	pthread_mutex_lock(&param->forks[philo->leftfork]);
-	ft_print(param, philo, "has taken a fork");
-	pthread_mutex_lock(&param->forks[philo->rightfork]);
-	ft_print(param, philo, "has taken a fork");
-	do_eat(philo, param);
-	ft_wait(param, param->time_to_eat);
-	pthread_mutex_unlock(&param->forks[philo->leftfork]);
-	pthread_mutex_unlock(&param->forks[philo->rightfork]);
+	pthread_mutex_lock(&param->search_fork);
+	if (param->fork_st[p->leftfork] == 0 && param->fork_st[p->rightfork] == 0)
+	{
+		pthread_mutex_lock(&param->forks[p->leftfork]);
+		ft_print(param, p, "has taken a fork");
+		param->fork_st[p->leftfork] = 1;
+		pthread_mutex_lock(&param->forks[p->rightfork]);
+		ft_print(param, p, "has taken a fork");
+		param->fork_st[p->rightfork] = 1;
+		do_eat(p, param);
+		pthread_mutex_unlock(&param->search_fork);
+		ft_wait(param, param->time_to_eat);
+		param->fork_st[p->leftfork] = 0;
+		param->fork_st[p->rightfork] = 0;
+		pthread_mutex_unlock(&param->forks[p->leftfork]);
+		pthread_mutex_unlock(&param->forks[p->rightfork]);
+		return (0);
+	}
+	pthread_mutex_unlock(&param->search_fork);
+	return (1);
 }
 
 void	do_think(t_philo *philo, t_param *param)
@@ -58,10 +71,10 @@ void	do_eat(t_philo *philo, t_param *param)
 {
 	long long	time;
 
-	pthread_mutex_lock(&(param->eat[0]));
+	pthread_mutex_lock(&(param->eat));
 	philo->eat_count++;
 	time = ft_get_time() - param->start_time;
 	philo->last_eat_time = time;
 	ft_print(param, philo, "is eating");
-	pthread_mutex_unlock(&(param->eat[0]));
+	pthread_mutex_unlock(&(param->eat));
 }
