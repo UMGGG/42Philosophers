@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 02:51:17 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 03:28:26 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/01 23:45:09 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,15 @@ int	ft_error(char *str)
 {
 	printf("%s\n", str);
 	return (1);
+}
+
+void	ft_print(t_param *param, t_philo *philo, char *str)
+{
+	long long	time;
+
+	pthread_mutex_lock(&param->print[0]);
+	time = ft_get_time() - param->start_time;
+	if (param->is_all_safe)
+		printf("%lldms	%d	%s\n", time, philo->philo_id, str);
+	pthread_mutex_unlock(&param->print[0]);
 }
