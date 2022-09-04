@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/02 06:26:39 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/05 00:02:26 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_check_die(t_param *par)
 				break ;
 			pthread_mutex_unlock(&(par->eat));
 			i++;
-			usleep(10);
+			usleep(1000);
 		}
 		i = 0;
 	}

@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 03:05:43 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/01 06:03:33 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/05 00:02:49 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ void	ft_wait(t_param *param, int time)
 		now_time = ft_get_time();
 		if (now_time - start_time >= time)
 			break ;
-		usleep(10);
+		usleep(200);
 	}
 }
