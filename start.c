@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/05 16:45:34 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/05 18:24:38 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ int	check_eat_time(t_param *p, int i)
 	time = ft_get_time() - p->start_time;
 	if ((time - p->philo[i].last_eat_time) > p->time_to_die)
 	{
-		p->is_all_safe = 0;
 		pthread_mutex_lock(&p->print);
+		p->is_all_safe = 0;
 		printf("%lldms	%d	is died\n", time, p->philo[i].philo_id);
 		return (1);
 	}
@@ -81,15 +81,15 @@ int	check_eat_num(t_param *p)
 	{
 		if (p->philo[i].eat_count >= p->must_eat_num && p->must_eat_num != -1)
 			check++;
-		if (check == p->philo_num)
-		{
-			pthread_mutex_lock(&p->print);
-			time = ft_get_time() - p->start_time;
-			printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
-			p->is_all_safe = 0;
-			return (1);
-		}
 		i++;
+	}
+	if (check == p->philo_num)
+	{
+		pthread_mutex_lock(&p->print);
+		p->is_all_safe = 0;
+		time = ft_get_time() - p->start_time;
+		printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
+		return (1);
 	}
 	return (0);
 }
@@ -113,7 +113,6 @@ void	finish_thread(t_param *param)
 	free(param->forks);
 	free(param->philo);
 	free(param->fork_st);
-	pthread_mutex_unlock(&param->print);
 	pthread_mutex_destroy(&(param->print));
 	pthread_mutex_destroy(&(param->eat));
 	pthread_mutex_destroy(&(param->search_fork));
