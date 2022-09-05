@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/02 06:15:19 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:30:33 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void		ft_wait(t_param *param, int time);
 int			ft_start_philo(t_param *par, t_philo *philo);
 void		ft_check_die(t_param *par);
 void		finish_thread(t_param *param);
-int			check_eat_num(t_param *p, int i);
+int			check_eat_num(t_param *p);
 int			check_eat_time(t_param *p, int i);
 /*philo*/
 void		*do_philo(void *philo);

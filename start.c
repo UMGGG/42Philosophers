@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/05 00:02:26 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:45:34 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_check_die(t_param *par)
 			pthread_mutex_lock(&(par->eat));
 			if (check_eat_time(par, i))
 				break ;
-			if (check_eat_num(par, i))
+			if (check_eat_num(par))
 				break ;
 			pthread_mutex_unlock(&(par->eat));
 			i++;
@@ -69,17 +69,27 @@ int	check_eat_time(t_param *p, int i)
 	return (0);
 }
 
-int	check_eat_num(t_param *p, int i)
+int	check_eat_num(t_param *p)
 {
 	long long	time;
+	int			i;
+	int			check;
 
-	time = ft_get_time() - p->start_time;
-	if (p->philo[i].eat_count >= p->must_eat_num && p->must_eat_num != -1)
+	i = 0;
+	check = 0;
+	while (i < p->philo_num)
 	{
-		p->is_all_safe = 0;
-		pthread_mutex_lock(&p->print);
-		printf("%lldms	Finished\n", time);
-		return (1);
+		if (p->philo[i].eat_count >= p->must_eat_num && p->must_eat_num != -1)
+			check++;
+		if (check == p->philo_num)
+		{
+			pthread_mutex_lock(&p->print);
+			time = ft_get_time() - p->start_time;
+			printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
+			p->is_all_safe = 0;
+			return (1);
+		}
+		i++;
 	}
 	return (0);
 }
