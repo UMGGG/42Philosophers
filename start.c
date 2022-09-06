@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/06 19:06:45 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/06 19:35:12 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_check_die(t_param *par)
 		}
 		i = 0;
 	}
+	pthread_mutex_unlock(&(par->eat));
 	finish_thread(par);
 }
 
@@ -108,7 +109,6 @@ void	finish_thread(t_param *param)
 		i++;
 	}
 	i = 0;
-	printf("finish join thread\n@@@@@@@@@@@@@@@@@@@");
 	while (i < param->philo_num)
 	{
 		pthread_mutex_destroy(&(param->forks[i]));
