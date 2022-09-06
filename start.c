@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/05 18:24:38 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/06 19:06:45 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ void	ft_check_die(t_param *par)
 			pthread_mutex_lock(&(par->eat));
 			if (check_eat_time(par, i))
 				break ;
-			if (check_eat_num(par))
-				break ;
+			if (par->must_eat_num != -1)
+				if (check_eat_num(par))
+					break ;
 			pthread_mutex_unlock(&(par->eat));
 			i++;
 			usleep(1000);
@@ -64,6 +65,7 @@ int	check_eat_time(t_param *p, int i)
 		pthread_mutex_lock(&p->print);
 		p->is_all_safe = 0;
 		printf("%lldms	%d	is died\n", time, p->philo[i].philo_id);
+		pthread_mutex_unlock(&p->print);
 		return (1);
 	}
 	return (0);
@@ -89,6 +91,7 @@ int	check_eat_num(t_param *p)
 		p->is_all_safe = 0;
 		time = ft_get_time() - p->start_time;
 		printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
+		pthread_mutex_unlock(&p->print);
 		return (1);
 	}
 	return (0);
@@ -101,10 +104,11 @@ void	finish_thread(t_param *param)
 	i = 0;
 	while (i < param->philo_num)
 	{
-		pthread_detach(param->philo[i].tid);
+		pthread_join(param->philo[i].tid, NULL);
 		i++;
 	}
 	i = 0;
+	printf("finish join thread\n@@@@@@@@@@@@@@@@@@@");
 	while (i < param->philo_num)
 	{
 		pthread_mutex_destroy(&(param->forks[i]));

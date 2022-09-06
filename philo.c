@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/05 18:25:58 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/06 19:07:36 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,12 @@ void	*do_philo(void *philo)
 	param = phil->param;
 	if (phil->philo_id % 2 != 1)
 		usleep(1000);
-	while (1)
+	while (param->is_all_safe)
 	{
-		while (get_fork1(philo, param))
+		while (get_fork1(phil, param))
 			usleep(100);
-		do_sleep(philo, param);
-		do_think(philo, param);
-		if (param->is_all_safe == 0)
-			break ;
+		do_sleep(phil, param);
+		do_think(phil, param);
 		usleep(100);
 	}
 	return (0);
@@ -36,6 +34,8 @@ void	*do_philo(void *philo)
 
 int	get_fork1(t_philo *p, t_param *param)
 {
+	if (param->is_all_safe == 0)
+		return (0);
 	pthread_mutex_lock(&param->search_fork);
 	if (param->fork_st[p->leftfork] == 0 && param->fork_st[p->rightfork] == 0)
 	{
@@ -61,22 +61,37 @@ int	get_fork1(t_philo *p, t_param *param)
 
 void	do_think(t_philo *philo, t_param *param)
 {
-	ft_print(param, philo, "is thinking");
+	if (param->is_all_safe == 0)
+		param->is_all_safe = 0;
+	else
+	{
+		ft_print(param, philo, "is thinking");
+	}
 }
 
 void	do_sleep(t_philo *philo, t_param *param)
 {
-	ft_print(param, philo, "is sleeping");
-	ft_wait(param, param->time_to_sleep);
+	if (param->is_all_safe == 0)
+		param->is_all_safe = 0;
+	else
+	{
+		ft_print(param, philo, "is sleeping");
+		ft_wait(param, param->time_to_sleep);
+	}
 }
 
 void	do_eat(t_philo *philo, t_param *param)
 {
 	long long	time;
 
-	pthread_mutex_lock(&(param->eat));
-	time = ft_get_time() - param->start_time;
-	philo->last_eat_time = time;
-	ft_print(param, philo, "is eating");
-	pthread_mutex_unlock(&(param->eat));
+	if (param->is_all_safe == 0)
+		time = 0;
+	else
+	{
+		pthread_mutex_lock(&(param->eat));
+		time = ft_get_time() - param->start_time;
+		philo->last_eat_time = time;
+		ft_print(param, philo, "is eating");
+		pthread_mutex_unlock(&(param->eat));
+	}
 }
