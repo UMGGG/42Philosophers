@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/07 16:54:54 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/07 17:25:54 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int			ft_start_philo(t_param *par, t_philo *philo);
 void		ft_check_die(t_param *par);
 void		finish_thread(t_param *param);
 int			check_eat_num(t_param *p);
-int			check_eat_time(t_param *p, int i);
+int			check_eat_time(t_param *p);
 /*philo*/
 void		*do_philo(void *philo);
 void		do_think(t_philo *philo, t_param *param);
