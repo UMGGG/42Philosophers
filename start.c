@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/06 19:35:12 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/07 17:00:56 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ int	ft_start_philo(t_param *par, t_philo *philo)
 			return (ft_error("[Error]thread create fail"));
 		i++;
 	}
-	usleep(par->time_to_die * 1000);
+	ft_wait(par, par->time_to_eat);
 	ft_check_die(par);
 	return (0);
 }
 
 void	ft_check_die(t_param *par)
 {
-	int	i;
+	int			i;
 
 	i = 0;
 	while (par->is_all_safe)
@@ -48,7 +48,7 @@ void	ft_check_die(t_param *par)
 					break ;
 			pthread_mutex_unlock(&(par->eat));
 			i++;
-			usleep(1000);
+			usleep(10);
 		}
 		i = 0;
 	}
@@ -60,15 +60,16 @@ int	check_eat_time(t_param *p, int i)
 {
 	long long	time;
 
+	pthread_mutex_lock(&p->print);
 	time = ft_get_time() - p->start_time;
 	if ((time - p->philo[i].last_eat_time) > p->time_to_die)
 	{
-		pthread_mutex_lock(&p->print);
 		p->is_all_safe = 0;
 		printf("%lldms	%d	is died\n", time, p->philo[i].philo_id);
 		pthread_mutex_unlock(&p->print);
 		return (1);
 	}
+	pthread_mutex_unlock(&p->print);
 	return (0);
 }
 

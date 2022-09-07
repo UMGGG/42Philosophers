@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/06 19:26:28 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/07 16:57:13 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*do_philo(void *philo)
 	phil = (t_philo *)philo;
 	param = phil->param;
 	if (phil->philo_id % 2 != 1)
-		usleep(1000);
+		ft_wait(param, 1);
 	while (param->is_all_safe)
 	{
 		while (get_fork1(phil, param))
