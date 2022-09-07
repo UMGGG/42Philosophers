@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/02 06:15:42 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/07 17:54:20 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	ft_philo_init(int argc, char *argv[], t_param *par)
 		par->must_eat_num = ft_atoi(argv[5]);
 	else
 		par->must_eat_num = -1;
+	if (par->must_eat_num == 0)
+		return (ft_error("0ms	all philo eat 0 time"));
 	par->fork_st = malloc(sizeof(int) * par->philo_num);
 	if (par->fork_st == NULL)
 		return (ft_error("[Error]malloc fork fail"));
