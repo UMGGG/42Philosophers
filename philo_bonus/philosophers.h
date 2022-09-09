@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 21:49:33 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 22:32:55 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int			check_is_num(char *str);
 int			ft_philo_init(int argc, char *argv[], t_param *par);
 int			ft_make_philo(t_param *par);
 int			ft_make_forks(t_param *param);
+void		set_eat_all(t_param *par);
 /*time*/
 long long	ft_get_time(void);
 void		ft_wait(t_param *param, int time);

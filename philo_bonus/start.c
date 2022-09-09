@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 21:57:04 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 22:47:55 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,19 +87,40 @@ int	check_eat_time(t_philo *phil)
 int	check_eat_num(t_philo *phil)
 {
 	t_param		*p;
+	int			check;
+	long long	time;
 
 	p = phil->param;
+	check = 0;
 	if (phil->eat_count >= p->must_eat_num && p->must_eat_num != -1 \
 	&& phil->eat_all == 0)
 	{
-		sem_wait(p->eat_all);
+		check = sem_post(p->eat_all);
 		phil->eat_all = 1;
+		printf("eat all %d\n", check);
+	}
+	if (check != 0)
+	{
+		sem_wait(p->print_sem);
+		p->is_all_safe = 0;
+		time = ft_get_time() - p->start_time;
+		printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
+		return (1);
 	}
 	return (0);
 }
 
 void	finish_thread(t_param *param)
 {
+	int	i;
+
+	i = 0;
+	while (i < param->philo_num)
+	{
+		pthread_detach(param->philo[i].monitor);
+		i++;
+	}
+	sem_post(param->print_sem);
 	sem_close(param->eat_sem);
 	sem_close(param->print_sem);
 	sem_close(param->search_fork_sem);

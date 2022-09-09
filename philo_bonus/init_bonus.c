@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 21:24:08 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 22:56:30 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,21 @@ int	ft_make_forks(t_param *p)
 	p->eat_all = sem_open("eat_all", O_CREAT | O_EXCL, 0644, p->philo_num);
 	if (p->eat_all == SEM_FAILED)
 		return (ft_error("[Error]eat_all open fail"));
+	set_eat_all(p);
 	return (0);
+}
+
+void	set_eat_all(t_param *par)
+{
+	int	i;
+	int	num;
+
+	i = 0;
+	num = 0;
+	while (i < par->philo_num)
+	{
+		num = sem_post(par->eat_all);
+		i++;
+		printf("%d  %d\n", *par->eat_all, num);
+	}
 }
