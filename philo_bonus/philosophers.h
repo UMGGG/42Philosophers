@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 16:35:18 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 17:17:04 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@
 typedef struct s_philo
 {
 	int				philo_id;
-	int				leftfork;
-	int				rightfork;
 	int				eat_count;
 	long long		last_eat_time;
 	pthread_t		tid;
@@ -39,13 +37,13 @@ typedef struct s_param
 	int				time_to_sleep;
 	int				must_eat_num;
 	int				is_all_safe;
-	int				*fork_st;
+	int				left_fork;
 	long long		start_time;
 	t_philo			*philo;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	print;
-	pthread_mutex_t	eat;
-	pthread_mutex_t	search_fork;
+	sem_t			*forks_sem;
+	sem_t			*print_sem;
+	sem_t			*eat_sem;
+	sem_t			*search_fork_sem;
 }				t_param;
 
 /*utils*/

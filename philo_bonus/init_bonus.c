@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 16:23:41 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 17:35:44 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,10 @@ int	ft_philo_init(int argc, char *argv[], t_param *par)
 		par->must_eat_num = -1;
 	if (par->must_eat_num == 0)
 		return (ft_error("0ms	all philo eat 0 time"));
-	par->fork_st = malloc(sizeof(int) * par->philo_num);
-	if (par->fork_st == NULL)
-		return (ft_error("[Error]malloc fork fail"));
-	while (i < par->philo_num)
-		par->fork_st[i++] = 0;
 	par->is_all_safe = 1;
+	par->left_fork = par->philo_num;
+	if (par->philo_num == 1)
+		par->left_fork = 2;
 	if (ft_make_philo(par))
 		return (ft_error("[Error]malloc philo fail"));
 	if (ft_make_forks(par))
@@ -54,12 +52,8 @@ int	ft_make_philo(t_param *par)
 	{
 		par->philo[i].eat_count = 0;
 		par->philo[i].last_eat_time = 0;
-		par->philo[i].leftfork = i;
-		par->philo[i].rightfork = i + 1;
 		par->philo[i].param = par;
 		par->philo[i].philo_id = i + 1;
-		if (i != 0 && i + 1 == par->philo_num)
-			par->philo[i].rightfork = 0;
 		i++;
 	}
 	return (0);
@@ -67,23 +61,23 @@ int	ft_make_philo(t_param *par)
 
 int	ft_make_forks(t_param *param)
 {
-	int	i;
+	int	errno;
 
-	i = 0;
-	if (pthread_mutex_init(&(param->print), NULL))
-		return (ft_error("[Error]print mutex init fail"));
-	if (pthread_mutex_init(&(param->search_fork), NULL))
-		return (ft_error("[Error]search_fork mutex init fail"));
-	if (pthread_mutex_init(&(param->eat), NULL))
-		return (ft_error("[Error]eat mutex init fail"));
-	param->forks = malloc(sizeof(pthread_mutex_t) * (param->philo_num));
-	if (param->forks == NULL)
-		return (ft_error("[Error]malloc forks fail"));
-	while (i < param->philo_num)
+	errno = 0;
+	param->eat_sem = sem_open("eat", O_CREAT | O_EXCL, 0644, 1);
+	if (param->eat_sem == SEM_FAILED)
 	{
-		if (pthread_mutex_init(&param->forks[i], NULL))
-			return (ft_error("[Error]forks mutex init fail"));
-		i++;
+		printf("%d\n", errno);
+		return (ft_error("[Error]eat_sem open fail"));
 	}
+	param->print_sem = sem_open("print", O_CREAT | O_EXCL, 0644, 1);
+	if (param->print_sem == SEM_FAILED)
+		return (ft_error("[Error]print_sem open fail"));
+	param->search_fork_sem = sem_open("search", O_CREAT | O_EXCL, 0644, 1);
+	if (param->search_fork_sem == SEM_FAILED)
+		return (ft_error("[Error]search_fork_sem open fail"));
+	param->forks_sem = sem_open("forks", O_CREAT | O_EXCL, 0644, param->philo_num);
+	if (param->search_fork_sem == SEM_FAILED)
+		return (ft_error("[Error]forks_sem open fail"));
 	return (0);
 }

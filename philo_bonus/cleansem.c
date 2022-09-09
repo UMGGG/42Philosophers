@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   cleansem.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/09 16:34:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 16:55:50 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 17:45:29 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,9 @@
 
 int main()
 {
-	sem_t	*forks;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	forks = sem_open("forks", O_CREAT | O_EXCL, 8);
-	if (forks == SEM_FAILED)
-		printf("[ERROR]sem open error\n");
-	while (j != 8)
-	{
-		sem_wait(forks);
-		printf("sem %d use\n", i);
-		i++;
-		j++;
-	}
-	sem_close(forks);
 	sem_unlink("forks");
+	sem_unlink("eat");
+	sem_unlink("print");
+	sem_unlink("search");
 	return (0);
 }

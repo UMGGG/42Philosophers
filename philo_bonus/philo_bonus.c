@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 16:23:25 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 17:48:48 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,25 @@ int	get_fork1(t_philo *p, t_param *param)
 {
 	if (param->is_all_safe == 0)
 		return (0);
-	pthread_mutex_lock(&param->search_fork);
-	if (param->fork_st[p->leftfork] == 0 && param->fork_st[p->rightfork] == 0)
+	sem_wait(param->search_fork_sem);
+	if (param->left_fork >= 2)
 	{
-		pthread_mutex_lock(&param->forks[p->leftfork]);
+		sem_wait(param->forks_sem);
 		ft_print(param, p, "has taken a fork");
-		param->fork_st[p->leftfork] = 1;
-		pthread_mutex_lock(&param->forks[p->rightfork]);
+		param->left_fork -= 1;
+		sem_wait(param->forks_sem);
 		ft_print(param, p, "has taken a fork");
-		param->fork_st[p->rightfork] = 1;
+		param->left_fork -= 1;
 		do_eat(p, param);
-		pthread_mutex_unlock(&param->search_fork);
+		sem_post(param->search_fork_sem);
 		ft_wait(param, param->time_to_eat);
-		param->fork_st[p->leftfork] = 0;
-		param->fork_st[p->rightfork] = 0;
-		pthread_mutex_unlock(&param->forks[p->leftfork]);
-		pthread_mutex_unlock(&param->forks[p->rightfork]);
+		sem_post(param->forks_sem);
+		sem_post(param->forks_sem);
+		param->left_fork += 2;
 		p->eat_count++;
 		return (0);
 	}
-	pthread_mutex_unlock(&param->search_fork);
+	sem_post(param->search_fork_sem);
 	return (1);
 }
 
@@ -88,10 +87,10 @@ void	do_eat(t_philo *philo, t_param *param)
 		time = 0;
 	else
 	{
-		pthread_mutex_lock(&(param->eat));
+		sem_wait(param->eat_sem);
 		time = ft_get_time() - param->start_time;
 		philo->last_eat_time = time;
 		ft_print(param, philo, "is eating");
-		pthread_mutex_unlock(&(param->eat));
+		sem_post(param->eat_sem);
 	}
 }

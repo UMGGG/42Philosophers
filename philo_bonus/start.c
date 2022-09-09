@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/07 17:27:50 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 17:17:53 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,16 @@ void	ft_check_die(t_param *par)
 {
 	while (par->is_all_safe)
 	{
-		pthread_mutex_lock(&(par->eat));
+		sem_wait(par->eat_sem);
 		if (check_eat_time(par))
 			break ;
 		if (par->must_eat_num != -1)
 			if (check_eat_num(par))
 				break ;
-		pthread_mutex_unlock(&(par->eat));
+		sem_post(par->eat_sem);
 		usleep(100);
 	}
-	pthread_mutex_unlock(&(par->eat));
+	sem_post(par->eat_sem);
 	finish_thread(par);
 }
 
@@ -59,10 +59,10 @@ int	check_eat_time(t_param *p)
 		time = ft_get_time() - p->start_time;
 		if ((time - p->philo[i].last_eat_time) > p->time_to_die)
 		{
-			pthread_mutex_lock(&p->print);
+			sem_wait(p->print_sem);
 			p->is_all_safe = 0;
 			printf("%lldms	%d	is died\n", time, p->philo[i].philo_id);
-			pthread_mutex_unlock(&p->print);
+			sem_post(p->print_sem);
 			return (1);
 		}
 		i++;
@@ -86,11 +86,11 @@ int	check_eat_num(t_param *p)
 	}
 	if (check == p->philo_num)
 	{
-		pthread_mutex_lock(&p->print);
+		sem_wait(p->print_sem);
 		p->is_all_safe = 0;
 		time = ft_get_time() - p->start_time;
 		printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
-		pthread_mutex_unlock(&p->print);
+		sem_post(p->print_sem);
 		return (1);
 	}
 	return (0);
@@ -107,15 +107,12 @@ void	finish_thread(t_param *param)
 		i++;
 	}
 	i = 0;
-	while (i < param->philo_num)
-	{
-		pthread_mutex_destroy(&(param->forks[i]));
-		i++;
-	}
-	free(param->forks);
-	free(param->philo);
-	free(param->fork_st);
-	pthread_mutex_destroy(&(param->print));
-	pthread_mutex_destroy(&(param->eat));
-	pthread_mutex_destroy(&(param->search_fork));
+	sem_close(param->eat_sem);
+	sem_close(param->print_sem);
+	sem_close(param->search_fork_sem);
+	sem_close(param->forks_sem);
+	sem_unlink("eat");
+	sem_unlink("print");
+	sem_unlink("search");
+	sem_unlink("forks");
 }
