@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/07 17:54:20 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 21:25:54 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ int	ft_philo_init(int argc, char *argv[], t_param *par)
 	par->time_to_die = ft_atoi(argv[2]);
 	par->time_to_eat = ft_atoi(argv[3]);
 	par->time_to_sleep = ft_atoi(argv[4]);
+	par->must_eat_num = -1;
 	if (argc == 6)
 		par->must_eat_num = ft_atoi(argv[5]);
-	else
-		par->must_eat_num = -1;
 	if (par->must_eat_num == 0)
 		return (ft_error("0ms	all philo eat 0 time"));
 	par->fork_st = malloc(sizeof(int) * par->philo_num);

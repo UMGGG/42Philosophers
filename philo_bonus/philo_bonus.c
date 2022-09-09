@@ -6,19 +6,20 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 17:48:48 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 21:55:29 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	*do_philo(void *philo)
+void	*do_philo(t_philo *phil)
 {
-	t_philo	*phil;
 	t_param	*param;
+	void	*philo_v;
 
-	phil = (t_philo *)philo;
+	philo_v = (void *)phil;
 	param = phil->param;
+	pthread_create(&phil->monitor, NULL, ft_check_die, philo_v);
 	if (phil->philo_id % 2 != 1)
 		ft_wait(param, 1);
 	while (param->is_all_safe)
@@ -29,7 +30,7 @@ void	*do_philo(void *philo)
 		do_think(phil, param);
 		usleep(100);
 	}
-	return (0);
+	exit(0);
 }
 
 int	get_fork1(t_philo *p, t_param *param)
@@ -37,25 +38,18 @@ int	get_fork1(t_philo *p, t_param *param)
 	if (param->is_all_safe == 0)
 		return (0);
 	sem_wait(param->search_fork_sem);
-	if (param->left_fork >= 2)
-	{
-		sem_wait(param->forks_sem);
-		ft_print(param, p, "has taken a fork");
-		param->left_fork -= 1;
-		sem_wait(param->forks_sem);
-		ft_print(param, p, "has taken a fork");
-		param->left_fork -= 1;
-		do_eat(p, param);
-		sem_post(param->search_fork_sem);
-		ft_wait(param, param->time_to_eat);
-		sem_post(param->forks_sem);
-		sem_post(param->forks_sem);
-		param->left_fork += 2;
-		p->eat_count++;
-		return (0);
-	}
+	sem_wait(param->forks_sem);
+	ft_print(param, p, "has taken a fork");
+	sem_wait(param->forks_sem);
+	ft_print(param, p, "has taken a fork");
+	do_eat(p, param);
 	sem_post(param->search_fork_sem);
-	return (1);
+	ft_wait(param, param->time_to_eat);
+	sem_post(param->forks_sem);
+	sem_post(param->forks_sem);
+	p->eat_count++;
+	sem_post(param->search_fork_sem);
+	return (0);
 }
 
 void	do_think(t_philo *philo, t_param *param)

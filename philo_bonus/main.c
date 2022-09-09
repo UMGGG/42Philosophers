@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:21:02 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/07 17:17:22 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 21:13:39 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (ft_start_philo(&param, (&param)->philo))
 		return (1);
-	return (0);
+	exit(0);
 }

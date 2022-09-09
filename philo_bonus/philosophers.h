@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 17:17:04 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 21:49:33 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,17 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 typedef struct s_philo
 {
 	int				philo_id;
 	int				eat_count;
 	long long		last_eat_time;
-	pthread_t		tid;
+	int				this_pid;
+	int				eat_all;
+	pthread_t		monitor;
 	struct s_param	*param;
 }				t_philo;
 
@@ -39,11 +43,13 @@ typedef struct s_param
 	int				is_all_safe;
 	int				left_fork;
 	long long		start_time;
+	int				monitor_pid;
 	t_philo			*philo;
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
 	sem_t			*eat_sem;
 	sem_t			*search_fork_sem;
+	sem_t			*eat_all;
 }				t_param;
 
 /*utils*/
@@ -51,6 +57,7 @@ int			check_whitespace(const char *str);
 int			ft_atoi(const char *str);
 int			ft_error(char *str);
 void		ft_print(t_param *param, t_philo *philo, char *str);
+void		end_process(int dead, t_param *par);
 /*check_argv*/
 int			check_argv(int argc, char *argv[]);
 int			check_is_num(char *str);
@@ -63,12 +70,12 @@ long long	ft_get_time(void);
 void		ft_wait(t_param *param, int time);
 /*start*/
 int			ft_start_philo(t_param *par, t_philo *philo);
-void		ft_check_die(t_param *par);
+void		*ft_check_die(void *par);
 void		finish_thread(t_param *param);
-int			check_eat_num(t_param *p);
-int			check_eat_time(t_param *p);
+int			check_eat_num(t_philo *phil);
+int			check_eat_time(t_philo *phil);
 /*philo*/
-void		*do_philo(void *philo);
+void		*do_philo(t_philo *philo);
 void		do_think(t_philo *philo, t_param *param);
 void		do_sleep(t_philo *philo, t_param *param);
 void		do_eat(t_philo *philo, t_param *param);

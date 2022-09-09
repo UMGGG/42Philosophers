@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 02:51:17 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 17:10:13 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/09 21:49:10 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,19 @@ void	ft_print(t_param *param, t_philo *philo, char *str)
 			printf("%lldms	%d	%s\n", time, philo->philo_id, str);
 		}
 		sem_post(param->print_sem);
+	}
+}
+
+void	end_process(int dead, t_param *par)
+{
+	int	i;
+
+	i = 0;
+	while (i < par->philo_num)
+	{
+		if (par->philo[i].this_pid != dead)
+			kill(par->philo[i].this_pid, SIGKILL);
+		i++;
+		usleep(100);
 	}
 }
