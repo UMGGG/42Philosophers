@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 22:47:55 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/10 23:12:38 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	ft_start_philo(t_param *par, t_philo *philo)
 
 	i = -1;
 	par->start_time = ft_get_time();
+	sem_unlink("eat_all");
 	while (++i < par->philo_num)
 	{
 		if (getpid() == par->monitor_pid)
@@ -30,6 +31,7 @@ int	ft_start_philo(t_param *par, t_philo *philo)
 			break ;
 		}
 	}
+	sem_unlink("eat_all");
 	while (1)
 	{
 		dead = waitpid(-1, &status, 0);
@@ -67,10 +69,8 @@ void	*ft_check_die(void *phil)
 int	check_eat_time(t_philo *phil)
 {
 	long long	time;
-	int			i;
 	t_param		*p;
 
-	i = 0;
 	p = phil->param;
 	time = ft_get_time() - p->start_time;
 	if ((time - phil->last_eat_time) > p->time_to_die)
@@ -87,25 +87,27 @@ int	check_eat_time(t_philo *phil)
 int	check_eat_num(t_philo *phil)
 {
 	t_param		*p;
-	int			check;
 	long long	time;
 
 	p = phil->param;
-	check = 0;
 	if (phil->eat_count >= p->must_eat_num && p->must_eat_num != -1 \
-	&& phil->eat_all == 0)
+	&& phil->is_eat_all == 0)
 	{
-		check = sem_post(p->eat_all);
-		phil->eat_all = 1;
-		printf("eat all %d\n", check);
+		printf("sem_post %d\n", phil->philo_id);
+		phil->is_eat_all = 1;
 	}
-	if (check != 0)
+	if (phil->is_eat_all == 1)
 	{
-		sem_wait(p->print_sem);
-		p->is_all_safe = 0;
-		time = ft_get_time() - p->start_time;
-		printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
-		return (1);
+		if (sem_open("eat_all", O_CREAT | O_EXCL, 0644, 1) == SEM_FAILED)
+			return (0);
+		else
+		{
+			p->is_all_safe = 0;
+			sem_wait(p->print_sem);
+			time = ft_get_time() - p->start_time;
+			printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
+			return (1);
+		}
 	}
 	return (0);
 }
@@ -120,7 +122,6 @@ void	finish_thread(t_param *param)
 		pthread_detach(param->philo[i].monitor);
 		i++;
 	}
-	sem_post(param->print_sem);
 	sem_close(param->eat_sem);
 	sem_close(param->print_sem);
 	sem_close(param->search_fork_sem);

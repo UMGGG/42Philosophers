@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 22:56:30 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/10 23:09:59 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int	ft_philo_init(int argc, char *argv[], t_param *par)
 {
-	int	i;
-
-	i = 0;
 	if (check_argv(argc, argv))
 		return (ft_error("[Error]check argv data"));
 	par->philo_num = ft_atoi(argv[1]);
@@ -55,7 +52,7 @@ int	ft_make_philo(t_param *par)
 		par->philo[i].last_eat_time = 0;
 		par->philo[i].param = par;
 		par->philo[i].philo_id = i + 1;
-		par->philo[i].eat_all = 0;
+		par->philo[i].is_eat_all = 0;
 		i++;
 	}
 	return (0);
@@ -84,21 +81,5 @@ int	ft_make_forks(t_param *p)
 	p->eat_all = sem_open("eat_all", O_CREAT | O_EXCL, 0644, p->philo_num);
 	if (p->eat_all == SEM_FAILED)
 		return (ft_error("[Error]eat_all open fail"));
-	set_eat_all(p);
 	return (0);
-}
-
-void	set_eat_all(t_param *par)
-{
-	int	i;
-	int	num;
-
-	i = 0;
-	num = 0;
-	while (i < par->philo_num)
-	{
-		num = sem_post(par->eat_all);
-		i++;
-		printf("%d  %d\n", *par->eat_all, num);
-	}
 }

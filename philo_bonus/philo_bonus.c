@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 21:55:29 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/10 23:06:42 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	*do_philo(t_philo *phil)
 
 	philo_v = (void *)phil;
 	param = phil->param;
+	sem_wait(param->eat_all);
 	pthread_create(&phil->monitor, NULL, ft_check_die, philo_v);
 	if (phil->philo_id % 2 != 1)
 		ft_wait(param, 1);
@@ -48,7 +49,6 @@ int	get_fork1(t_philo *p, t_param *param)
 	sem_post(param->forks_sem);
 	sem_post(param->forks_sem);
 	p->eat_count++;
-	sem_post(param->search_fork_sem);
 	return (0);
 }
 

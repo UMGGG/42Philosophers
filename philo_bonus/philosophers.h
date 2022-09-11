@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 22:32:55 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/10 23:06:06 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_philo
 	int				eat_count;
 	long long		last_eat_time;
 	int				this_pid;
-	int				eat_all;
+	int				is_eat_all;
 	pthread_t		monitor;
 	struct s_param	*param;
 }				t_philo;
@@ -65,7 +65,6 @@ int			check_is_num(char *str);
 int			ft_philo_init(int argc, char *argv[], t_param *par);
 int			ft_make_philo(t_param *par);
 int			ft_make_forks(t_param *param);
-void		set_eat_all(t_param *par);
 /*time*/
 long long	ft_get_time(void);
 void		ft_wait(t_param *param, int time);
