@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/10 23:06:06 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 21:16:26 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ typedef struct s_param
 	int				time_to_sleep;
 	int				must_eat_num;
 	int				is_all_safe;
-	int				left_fork;
 	long long		start_time;
-	int				monitor_pid;
 	t_philo			*philo;
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
@@ -58,9 +56,10 @@ int			ft_atoi(const char *str);
 int			ft_error(char *str);
 void		ft_print(t_param *param, t_philo *philo, char *str);
 void		end_process(int dead, t_param *par);
-/*check_argv*/
+/*check*/
 int			check_argv(int argc, char *argv[]);
 int			check_is_num(char *str);
+void		*check_eat(void *par);
 /*init*/
 int			ft_philo_init(int argc, char *argv[], t_param *par);
 int			ft_make_philo(t_param *par);

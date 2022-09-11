@@ -6,13 +6,13 @@
 #    By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/29 18:31:50 by jaeyjeon          #+#    #+#              #
-#    Updated: 2022/09/09 21:44:59 by jaeyjeon         ###   ########.fr        #
+#    Updated: 2022/09/11 20:12:25 by jaeyjeon         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_bonus
 
-CC = gcc
+CC = cc
 CFLAGS = -Wextra -Werror -Wall
 
 SRCS =	main.c init_bonus.c check.c utils.c time.c start.c philo_bonus.c

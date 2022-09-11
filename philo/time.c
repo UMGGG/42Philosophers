@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 03:05:43 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/06 19:00:49 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 20:31:08 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ void	ft_wait(t_param *param, int time)
 		now_time = ft_get_time();
 		if (now_time - start_time >= time)
 			break ;
-		usleep(200);
+		usleep(300);
 	}
 }

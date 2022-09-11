@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:21:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/10 23:12:38 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 21:32:47 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,29 @@
 
 int	ft_start_philo(t_param *par, t_philo *philo)
 {
-	int		i;
-	int		dead;
-	int		status;
+	int			i;
+	int			dead;
+	pid_t		eat_num;
 
 	i = -1;
+	dead = 0;
 	par->start_time = ft_get_time();
-	sem_unlink("eat_all");
 	while (++i < par->philo_num)
 	{
-		if (getpid() == par->monitor_pid)
-			par->philo[i].this_pid = fork();
-		if (getpid() != par->monitor_pid)
-		{
+		par->philo[i].this_pid = fork();
+		if (par->philo[i].this_pid == 0)
 			do_philo(&philo[i]);
-			break ;
-		}
 	}
-	sem_unlink("eat_all");
-	while (1)
-	{
-		dead = waitpid(-1, &status, 0);
-		if (dead > 0)
-			break ;
-	}
+	eat_num = fork();
+	if (eat_num == 0)
+		check_eat(par);
+	while (dead <= 0)
+		dead = waitpid(-1, &i, 0);
+	if (dead != eat_num)
+		kill(eat_num, SIGKILL);
 	end_process(dead, par);
 	finish_thread(par);
-	return (0);
+	exit(0);
 }
 
 void	*ft_check_die(void *phil)
@@ -87,27 +83,13 @@ int	check_eat_time(t_philo *phil)
 int	check_eat_num(t_philo *phil)
 {
 	t_param		*p;
-	long long	time;
 
 	p = phil->param;
 	if (phil->eat_count >= p->must_eat_num && p->must_eat_num != -1 \
 	&& phil->is_eat_all == 0)
 	{
-		printf("sem_post %d\n", phil->philo_id);
 		phil->is_eat_all = 1;
-	}
-	if (phil->is_eat_all == 1)
-	{
-		if (sem_open("eat_all", O_CREAT | O_EXCL, 0644, 1) == SEM_FAILED)
-			return (0);
-		else
-		{
-			p->is_all_safe = 0;
-			sem_wait(p->print_sem);
-			time = ft_get_time() - p->start_time;
-			printf("%lldms	all philo eat %d time\n", time, p->must_eat_num);
-			return (1);
-		}
+		sem_post(p->eat_all);
 	}
 	return (0);
 }

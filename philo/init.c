@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 21:25:54 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 21:10:48 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	ft_philo_init(int argc, char *argv[], t_param *par)
 	int	i;
 
 	i = 0;
-	if (check_argv(argc, argv))
-		return (ft_error("[Error]check argv data"));
 	par->philo_num = ft_atoi(argv[1]);
 	par->time_to_die = ft_atoi(argv[2]);
 	par->time_to_eat = ft_atoi(argv[3]);

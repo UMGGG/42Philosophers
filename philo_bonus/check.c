@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:34:13 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/08/31 03:20:08 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 21:12:02 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,24 @@ int	check_argv(int argc, char *argv[])
 		if (ft_atoi(argv[5]) < 0)
 			return (1);
 	return (0);
+}
+
+void	*check_eat(void *par)
+{
+	int			i;
+	long long	time;
+	t_param		*param;
+
+	param = (t_param *)par;
+	i = 0;
+	usleep(1000);
+	while (i < param->philo_num)
+	{
+		sem_wait(param->eat_all);
+		i++;
+	}
+	sem_wait(param->print_sem);
+	time = ft_get_time() - param->start_time;
+	printf("%lldms	all philo eaten %d time", time, param->must_eat_num);
+	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 02:51:17 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/09 21:49:10 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 21:25:08 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,11 @@ void	end_process(int dead, t_param *par)
 	int	i;
 
 	i = 0;
+	(void)dead;
 	while (i < par->philo_num)
 	{
-		if (par->philo[i].this_pid != dead)
-			kill(par->philo[i].this_pid, SIGKILL);
+		kill(par->philo[i].this_pid, SIGKILL);
+		usleep(500);
 		i++;
-		usleep(100);
 	}
 }

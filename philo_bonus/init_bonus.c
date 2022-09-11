@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:35:37 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/10 23:09:59 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/11 21:16:30 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,6 @@ int	ft_philo_init(int argc, char *argv[], t_param *par)
 	if (par->must_eat_num == 0)
 		return (ft_error("0ms	all philo eat 0 time"));
 	par->is_all_safe = 1;
-	par->left_fork = par->philo_num;
-	par->monitor_pid = getpid();
-	if (par->philo_num == 1)
-		par->left_fork = 2;
 	if (ft_make_philo(par))
 		return (ft_error("[Error]malloc philo fail"));
 	if (ft_make_forks(par))
@@ -53,6 +49,7 @@ int	ft_make_philo(t_param *par)
 		par->philo[i].param = par;
 		par->philo[i].philo_id = i + 1;
 		par->philo[i].is_eat_all = 0;
+		par->philo[i].this_pid = 0;
 		i++;
 	}
 	return (0);
