@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaeyjeon <@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 03:20:44 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/10 23:06:42 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/12 15:59:24 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*do_philo(t_philo *phil)
 		ft_wait(param, 1);
 	while (param->is_all_safe)
 	{
-		while (get_fork1(phil, param))
+		while (get_fork(phil, param))
 			usleep(100);
 		do_sleep(phil, param);
 		do_think(phil, param);
@@ -34,7 +34,7 @@ void	*do_philo(t_philo *phil)
 	exit(0);
 }
 
-int	get_fork1(t_philo *p, t_param *param)
+int	get_fork(t_philo *p, t_param *param)
 {
 	if (param->is_all_safe == 0)
 		return (0);

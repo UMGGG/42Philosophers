@@ -6,7 +6,7 @@
 /*   By: jaeyjeon <jaeyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 18:16:06 by jaeyjeon          #+#    #+#             */
-/*   Updated: 2022/09/07 17:25:54 by jaeyjeon         ###   ########.fr       */
+/*   Updated: 2022/09/12 15:59:13 by jaeyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,5 @@ void		*do_philo(void *philo);
 void		do_think(t_philo *philo, t_param *param);
 void		do_sleep(t_philo *philo, t_param *param);
 void		do_eat(t_philo *philo, t_param *param);
-int			get_fork1(t_philo *philo, t_param *param);
+int			get_fork(t_philo *philo, t_param *param);
 #endif
